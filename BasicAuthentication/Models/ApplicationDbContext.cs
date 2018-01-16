@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BasicAuthentication.Models
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+	public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+	{
+
+	}
+    protected override void OnMOdelCreating(ModelBuilder builder)
     {
-        public ApplicationDbContext(DbContextOptions options) : base (options)
-        {
-            
-        }
+        TypeBaseExtensions.OnModelCreating(builder);
     }
+    public DbSet<Item> Items { get; set; }
 }

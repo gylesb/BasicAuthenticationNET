@@ -12,52 +12,45 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BasicAuthentication
 {
-	public class Startup
-	{
-		public IConfigurationRoot Configuration { get; set; }
-		public Startup(IHostingEnvironment env)
-		{
-			var builder = new ConfigurationBuilder()
-				.SetBasePath(env.ContentRootPath)
-				.AddJsonFile("appsettings.json");
-			Configuration = builder.Build();
-		}
-		public void ConfigureServices(IServiceCollection services)
-		{
-			services.AddMvc();
-			services.AddEntityFrameworkMySql()
-					.AddDbContext<ApplicationDbContext>(options =>
-											  options
-												   .UseMySql(Configuration["ConnectionStrings:DefaultConnection"]));
+    public class Startup
+    {
+        public IConfigurationRoot Configuration { get; set; }
+        public Startup(IHostingEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json");
+            Configuration = builder.Build();
+        }
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc();
+            services.AddEntityFrameworkMySql()
+                    .AddDbContext<ApplicationDbContext>(options =>
+                                              options
+                                                   .UseMySql(Configuration["ConnectionStrings:DefaultConnection"]));
 
-			services.AddIdentity<ApplicationUser, IdentityRole>()
-				.AddEntityFrameworkStores<ApplicationDbContext>()
-				.AddDefaultTokenProviders();
+            // This is new
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+        }
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        public void Configure(IApplicationBuilder app)
+        {
+            // This is new
+            app.UseIdentity();
+
+            app.UseMvc(routes =>
             {
-                options.Password.RequireUppercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredLength = 0;
-                options.Password.RequireDigit = false;
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Account}/{action=Index}/{id?}");  // <-There is an edit here
             });
-		}
-
-		public void Configure(IApplicationBuilder app)
-		{
-			// This is new
-			app.UseIdentity();
-
-			app.UseMvc(routes =>
-			{
-				routes.MapRoute(
-					name: "default",
-					template: "{controller=Account}/{action=Index}/{id?}");  // <-There is an edit here
-			});
-			app.Run(async (context) =>
-			{
-				await context.Response.WriteAsync("Hello World!");
-			});
-		}
-	}
+            app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync("Hello World!");
+            });
+        }
+    }
 }
