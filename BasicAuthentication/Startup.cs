@@ -30,10 +30,17 @@ namespace BasicAuthentication
 											  options
 												   .UseMySql(Configuration["ConnectionStrings:DefaultConnection"]));
 
-			// This is new
 			services.AddIdentity<ApplicationUser, IdentityRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 0;
+                options.Password.RequireDigit = false;
+            });
 		}
 
 		public void Configure(IApplicationBuilder app)
