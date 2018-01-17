@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model BasicAuthentication.Models.Item
+
+<h2>Add a new task</h2>
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.LabelFor(model => model.description)
+    @Html.EditorFor(model => model.description)
+    <input type="submit" value="Create" />
+}
+
+@Html.ActionLink("Back to List", "Index")

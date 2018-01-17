@@ -33,6 +33,7 @@ namespace BasicAuthentication.Controllers
 		{
 			return View();
 		}
+
 		[HttpPost]
 		public async Task<IActionResult> Create(Item item)
 		{
@@ -43,7 +44,5 @@ namespace BasicAuthentication.Controllers
 			_db.SaveChanges();
 			return RedirectToAction("Index");
 		}
-
 	}
-
 }
